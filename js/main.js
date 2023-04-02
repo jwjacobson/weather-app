@@ -1,5 +1,4 @@
-// adapted from https://www.geeksforgeeks.org/how-to-use-the-javascript-fetch-api-to-get-data/#
-const url = `https://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=Boston`;
+// getapi() and show() functions adapted from https://www.geeksforgeeks.org/how-to-use-the-javascript-fetch-api-to-get-data/#
  
 async function getapi(url) {
     const response = await fetch(url);
@@ -7,16 +6,28 @@ async function getapi(url) {
     console.log(data);
     show(data);
 }
-getapi(url);
 
 function show(data) {
-    let tab = 
+    let weather = 
         `<ul>Current Weather:</ul>`;
-        tab += ` 
-    <li class="list-group-item list-group-item-success">Temp/Feels Like (C): ${data.current.temp_c}/${data.current.feelslike_c}</li>
+        weather += ` 
+    <li class="list-group-item list-group-item-danger">Temp/Feels Like (C): ${data.current.temp_c}/${data.current.feelslike_c}</li>
     <li class="list-group-item list-group-item-success">Temp/Feels Like (F): ${data.current.temp_f}/${data.current.feelslike_f}</li>
-    <li class="list-group-item list-group-item-success">Conditions: ${data.current.condition.text}</li>
+    <li class="list-group-item list-group-item-warning">Conditions: ${data.current.condition.text}</li>
     `;
     // Setting innerHTML as tab variable
-    document.getElementById("234").innerHTML = tab;
+    document.getElementById("cityWeather").innerHTML = weather;
 }
+
+let form = document.getElementById('weatherForm');
+form.addEventListener('submit', handleFormSubmit);
+
+async function handleFormSubmit(event){
+    event.preventDefault();
+    let weatherCity = event.target.weatherCity.value;
+    console.log(weatherCity);
+    const url = `https://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${weatherCity}`;
+    getapi(url);
+    event.target.weatherCity.value = '';
+}
+            
